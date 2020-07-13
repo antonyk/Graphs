@@ -10,36 +10,51 @@ class Graph:
         self.vertices = {}
 
     def add_vertex(self, vertex_id):
-        """
-        Add a vertex to the graph.
-        """
-        pass  # TODO
+        if (vertex_id not in self.vertices):
+            self.vertices[vertex_id] = set()
+            print(f"Added vertex {vertex_id}")
+        else:
+            raise KeyError("Vertex already exists")
 
     def add_edge(self, v1, v2):
-        """
-        Add a directed edge to the graph.
-        """
-        pass  # TODO
+        if v1 not in self.vertices:
+            raise IndexError(f"Failed to add edge {v1}, {v2}. Source vertex {v1} does not exist.")
+        if v2 not in self.vertices:
+            raise IndexError(f"Failed to add edge {v1}, {v2}. Target vertex {v2} does not exist.")
+
+        self.vertices[v1].add(v2)
+        print(f"Added edge from {v1} to {v2}")
 
     def get_neighbors(self, vertex_id):
-        """
-        Get all neighbors (edges) of a vertex.
-        """
-        pass  # TODO
+        return self.vertices[vertex_id]
 
     def bft(self, starting_vertex):
-        """
-        Print each vertex in breadth-first order
-        beginning from starting_vertex.
-        """
-        pass  # TODO
+        pending = Queue()
+        visited = set()
+
+        if starting_vertex in self.vertices:
+            pending.enqueue(starting_vertex)
+        while len(pending) > 0:
+            vert = pending.dequeue()
+            if vert not in visited:
+                visited.add(vert)
+                print(f"BFT: Visited vertex {vert}")
+                for neighbor in self.get_neighbors(vert):
+                    pending.enqueue(neighbor)
 
     def dft(self, starting_vertex):
-        """
-        Print each vertex in depth-first order
-        beginning from starting_vertex.
-        """
-        pass  # TODO
+        pending = Stack()
+        visited = set()
+
+        if starting_vertex in self.vertices:
+            pending.push(starting_vertex)
+        while len(pending) > 0:
+            vert = pending.pop()
+            if vert not in visited:
+                visited.add(vert)
+                print(f"DFT: Visited vertex {vert}")
+                for neighbor in self.get_neighbors(vert):
+                    pending.push(neighbor)
 
     def dft_recursive(self, starting_vertex):
         """
@@ -48,7 +63,7 @@ class Graph:
 
         This should be done using recursion.
         """
-        pass  # TODO
+        print("NOT implemented")
 
     def bfs(self, starting_vertex, destination_vertex):
         """
@@ -56,7 +71,7 @@ class Graph:
         starting_vertex to destination_vertex in
         breath-first order.
         """
-        pass  # TODO
+        print("NOT implemented")
 
     def dfs(self, starting_vertex, destination_vertex):
         """
@@ -64,7 +79,7 @@ class Graph:
         starting_vertex to destination_vertex in
         depth-first order.
         """
-        pass  # TODO
+        print("NOT implemented")
 
     def dfs_recursive(self, starting_vertex, destination_vertex):
         """
@@ -74,7 +89,7 @@ class Graph:
 
         This should be done using recursion.
         """
-        pass  # TODO
+        print("NOT implemented")
 
 if __name__ == '__main__':
     graph = Graph()  # Instantiate your graph
@@ -128,18 +143,36 @@ if __name__ == '__main__':
         1, 2, 4, 6, 3, 5, 7
     '''
     graph.dft(1)
-    graph.dft_recursive(1)
+    # graph.dft_recursive(1)
 
     '''
     Valid BFS path:
         [1, 2, 4, 6]
     '''
-    print(graph.bfs(1, 6))
+    # print(graph.bfs(1, 6))
 
     '''
     Valid DFS paths:
         [1, 2, 4, 6]
         [1, 2, 4, 7, 6]
     '''
-    print(graph.dfs(1, 6))
-    print(graph.dfs_recursive(1, 6))
+    # print(graph.dfs(1, 6))
+    # print(graph.dfs_recursive(1, 6))
+
+
+    print("----- FROM README -----")
+    graph = Graph()
+    graph.add_vertex('0')
+    graph.add_vertex('1')
+    graph.add_vertex('2')
+    graph.add_vertex('3')
+    graph.add_edge('0', '1')
+    graph.add_edge('1', '0')
+    graph.add_edge('0', '3')
+    graph.add_edge('3', '0')
+    # graph.add_edge('0', '4')  # No '4' vertex, should raise an Exception!    
+    print(graph.vertices)
+
+    graph.bft('0')
+
+
