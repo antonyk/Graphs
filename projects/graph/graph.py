@@ -62,14 +62,13 @@ class Graph:
         # visited = set()
 
         # def dft_rec(self, visited, vert):
+        #     for neighbor in self.get_neighbors(vert):
+        #         if neighbor not in visited:
+        #             dft_rec(visited, neighbor)
 
-        #     neighbors = self.get_neighbors(vert)
+        # dft_rec(visited, starting_vertex)
 
 
-
-
-
-        
 
 
         # self.get_neighbors(starting_vertex)
@@ -103,6 +102,13 @@ class Graph:
                     new_path.append(neighbor)
                     pending.enqueue(new_path)
 
+        return None # path to destination vert not found
+
+
+    def word_search(self, starting_word, ending_word):
+
+        pass
+
 
     def dfs(self, starting_vertex, destination_vertex):
         """
@@ -131,6 +137,8 @@ class Graph:
                     new_path = list(path)
                     new_path.append(neighbor)
                     pending.push(new_path)
+
+        return None # path to destination vert not found
 
 
     def dfs_recursive(self, starting_vertex, destination_vertex):
@@ -228,3 +236,52 @@ if __name__ == '__main__':
     # graph.bft('0')
 
 
+
+    def find_words(starting_word, ending_word):
+        visited = set()
+        pending = Queue()
+
+        pending.enqueue([starting_word])
+
+        while len(pending) > 0:
+            path = pending.dequeue()
+            vert = path[-1]
+
+            if vert == ending_word:
+                return path
+            
+            if vert not in visited:
+                visited.add(vert)
+                for neighbor in get_neighbors(vert):
+                    new_path = list(path)
+                    new_path.append(neighbor)
+                    pending.enqueue(new_path)
+
+
+    import string
+    letters = list(string.ascii_lowercase)
+    word_set = set(['hit', 'hot', 'hog', 'cog', 'cot'])
+
+    def get_neighbors(word):
+        neighbors = []
+        # g = Graph()
+
+        # starting_word = list(word)
+
+        for i, _ in enumerate(word):
+            for letter in letters:
+                new_word = list(word)
+                new_word[i] = letter
+                w = "".join(new_word)
+
+                if w == word:
+                    continue
+
+                if w in word_set:
+                    neighbors.append(w)
+
+        return neighbors
+
+
+
+    print(find_words("hit", "cog"))
