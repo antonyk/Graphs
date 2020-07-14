@@ -59,20 +59,17 @@ class Graph:
                     pending.push(neighbor)
 
     def dft_recursive(self, starting_vertex):
-        # visited = set()
+        visited = set()
 
-        # def dft_rec(self, visited, vert):
-        #     for neighbor in self.get_neighbors(vert):
-        #         if neighbor not in visited:
-        #             dft_rec(visited, neighbor)
+        def traverse(cur_vert):
+            if cur_vert not in visited:
+                visited.add(cur_vert)
+                print(cur_vert)
+                for neighbor in self.get_neighbors(cur_vert):
+                    traverse(neighbor)
 
-        # dft_rec(visited, starting_vertex)
+        traverse(starting_vertex)
 
-
-
-
-        # self.get_neighbors(starting_vertex)
-        print("NOT implemented")
 
     def bfs(self, starting_vertex, destination_vertex):
         """
@@ -193,6 +190,7 @@ if __name__ == '__main__':
         1, 2, 4, 3, 7, 6, 5
         1, 2, 4, 3, 7, 5, 6
     '''
+    print("--- BFT ---")
     graph.bft(1)
 
     '''
@@ -202,13 +200,16 @@ if __name__ == '__main__':
         1, 2, 4, 7, 6, 3, 5
         1, 2, 4, 6, 3, 5, 7
     '''
+    print("--- DFT ---")
     graph.dft(1)
-    # graph.dft_recursive(1)
+    print("--- DFT Recursive ---")
+    graph.dft_recursive(1)
 
     '''
     Valid BFS path:
         [1, 2, 4, 6]
     '''
+    print("--- BFS ---")
     print(graph.bfs(1, 6))
 
     '''
