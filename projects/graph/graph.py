@@ -12,7 +12,7 @@ class Graph:
     def add_vertex(self, vertex_id):
         if (vertex_id not in self.vertices):
             self.vertices[vertex_id] = set()
-            print(f"Added vertex {vertex_id}")
+            # print(f"Added vertex {vertex_id}")
         else:
             raise KeyError("Vertex already exists")
 
@@ -23,7 +23,7 @@ class Graph:
             raise IndexError(f"Failed to add edge {v1}, {v2}. Target vertex {v2} does not exist.")
 
         self.vertices[v1].add(v2)
-        print(f"Added edge from {v1} to {v2}")
+        # print(f"Added edge from {v1} to {v2}")
 
     def get_neighbors(self, vertex_id):
         return self.vertices[vertex_id]
@@ -38,7 +38,8 @@ class Graph:
             vert = pending.dequeue()
             if vert not in visited:
                 visited.add(vert)
-                print(f"BFT: Visited vertex {vert}")
+                print(vert)
+                # print(f"BFT: Visited vertex {vert}")
                 for neighbor in self.get_neighbors(vert):
                     pending.enqueue(neighbor)
 
@@ -52,26 +53,56 @@ class Graph:
             vert = pending.pop()
             if vert not in visited:
                 visited.add(vert)
-                print(f"DFT: Visited vertex {vert}")
+                print(vert)
+                # print(f"DFT: Visited vertex {vert}")
                 for neighbor in self.get_neighbors(vert):
                     pending.push(neighbor)
 
     def dft_recursive(self, starting_vertex):
-        """
-        Print each vertex in depth-first order
-        beginning from starting_vertex.
+        # visited = set()
 
-        This should be done using recursion.
-        """
+        # def dft_rec(self, visited, vert):
+
+        #     neighbors = self.get_neighbors(vert)
+
+
+
+
+
+        
+
+
+        # self.get_neighbors(starting_vertex)
         print("NOT implemented")
 
     def bfs(self, starting_vertex, destination_vertex):
         """
-        Return a list containing the shortest path from
-        starting_vertex to destination_vertex in
-        breath-first order.
+        Return a list containing the shortest path
         """
-        print("NOT implemented")
+        if starting_vertex not in self.vertices:
+            raise KeyError("Invalid starting vertex")
+        if destination_vertex not in self.vertices:
+            raise KeyError("Invalid destination vertex")
+
+        visited = set()
+        pending = Queue()
+        path = [starting_vertex]
+        pending.enqueue(path)
+        while len(pending) > 0:
+            path = pending.dequeue()
+            # print(path)
+            vert = path[-1]
+            # potentially move this inside the visited check
+            if vert == destination_vertex:
+                return path
+
+            if vert not in visited:
+                visited.add(vert)
+                for neighbor in self.get_neighbors(vert):
+                    new_path = list(path)
+                    new_path.append(neighbor)
+                    pending.enqueue(new_path)
+
 
     def dfs(self, starting_vertex, destination_vertex):
         """
@@ -79,7 +110,28 @@ class Graph:
         starting_vertex to destination_vertex in
         depth-first order.
         """
-        print("NOT implemented")
+        if starting_vertex not in self.vertices:
+            raise KeyError("Invalid starting vertex")
+        if destination_vertex not in self.vertices:
+            raise KeyError("Invalid destination vertex")
+
+        visited = set()
+        pending = Stack()
+        path = [starting_vertex]
+        pending.push(path)
+        while len(pending) > 0:
+            path = pending.pop()
+            vert = path[-1]
+            if vert == destination_vertex:
+                return path
+
+            if vert not in visited:
+                visited.add(vert)
+                for neighbor in self.get_neighbors(vert):
+                    new_path = list(path)
+                    new_path.append(neighbor)
+                    pending.push(new_path)
+
 
     def dfs_recursive(self, starting_vertex, destination_vertex):
         """
@@ -149,30 +201,30 @@ if __name__ == '__main__':
     Valid BFS path:
         [1, 2, 4, 6]
     '''
-    # print(graph.bfs(1, 6))
+    print(graph.bfs(1, 6))
 
     '''
     Valid DFS paths:
         [1, 2, 4, 6]
         [1, 2, 4, 7, 6]
     '''
-    # print(graph.dfs(1, 6))
+    print(graph.dfs(1, 6))
     # print(graph.dfs_recursive(1, 6))
 
 
-    print("----- FROM README -----")
-    graph = Graph()
-    graph.add_vertex('0')
-    graph.add_vertex('1')
-    graph.add_vertex('2')
-    graph.add_vertex('3')
-    graph.add_edge('0', '1')
-    graph.add_edge('1', '0')
-    graph.add_edge('0', '3')
-    graph.add_edge('3', '0')
+    # print("----- FROM README -----")
+    # graph = Graph()
+    # graph.add_vertex('0')
+    # graph.add_vertex('1')
+    # graph.add_vertex('2')
+    # graph.add_vertex('3')
+    # graph.add_edge('0', '1')
+    # graph.add_edge('1', '0')
+    # graph.add_edge('0', '3')
+    # graph.add_edge('3', '0')
     # graph.add_edge('0', '4')  # No '4' vertex, should raise an Exception!    
-    print(graph.vertices)
+    # print(graph.vertices)
 
-    graph.bft('0')
+    # graph.bft('0')
 
 
