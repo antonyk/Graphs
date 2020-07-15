@@ -58,22 +58,18 @@ class Graph:
                 for neighbor in self.get_neighbors(vert):
                     pending.push(neighbor)
 
-    def dft_recursive(self, starting_vertex):
-        # visited = set()
+    def dft_recursive(self, starting_vertex, visited = None):
+        visited = set()
 
-        # def dft_rec(self, visited, vert):
+        def traverse(cur_vert):
+            if cur_vert not in visited:
+                visited.add(cur_vert)
+                print(cur_vert)
+                for neighbor in self.get_neighbors(cur_vert):
+                    traverse(neighbor)
 
-        #     neighbors = self.get_neighbors(vert)
+        traverse(starting_vertex)
 
-
-
-
-
-        
-
-
-        # self.get_neighbors(starting_vertex)
-        print("NOT implemented")
 
     def bfs(self, starting_vertex, destination_vertex):
         """
@@ -103,6 +99,13 @@ class Graph:
                     new_path.append(neighbor)
                     pending.enqueue(new_path)
 
+        return None # path to destination vert not found
+
+
+    def word_search(self, starting_word, ending_word):
+
+        pass
+
 
     def dfs(self, starting_vertex, destination_vertex):
         """
@@ -128,9 +131,12 @@ class Graph:
             if vert not in visited:
                 visited.add(vert)
                 for neighbor in self.get_neighbors(vert):
-                    new_path = list(path)
-                    new_path.append(neighbor)
-                    pending.push(new_path)
+                    if neighbor not in visited:
+                        new_path = list(path)
+                        new_path.append(neighbor)
+                        pending.push(new_path)
+
+        return None # path to destination vert not found
 
 
     def dfs_recursive(self, starting_vertex, destination_vertex):
@@ -141,7 +147,37 @@ class Graph:
 
         This should be done using recursion.
         """
-        print("NOT implemented")
+        if starting_vertex not in self.vertices:
+            raise KeyError("Invalid starting vertex")
+        if destination_vertex not in self.vertices:
+            raise KeyError("Invalid destination vertex")
+
+        visited = set()
+
+        '''
+        A
+        A B D
+        A C E
+        '''
+        def search(cur_path, end_vert):
+            cur_vert = cur_path[-1]
+            if cur_vert == end_vert:
+                return cur_path
+
+            if cur_vert not in visited:
+                visited.add(cur_vert)
+                new_verts = False
+                for neighbor in self.get_neighbors(cur_vert):
+                    if neighbor not in visited:
+                        new_verts = True
+                        new_path = list(cur_path)
+                        new_path.append(neighbor)
+                        search(new_path, end_vert)
+                if not new_verts:
+                    return None  # no path found
+
+        return search([starting_vertex], destination_vertex)
+
 
 if __name__ == '__main__':
     graph = Graph()  # Instantiate your graph
@@ -185,6 +221,7 @@ if __name__ == '__main__':
         1, 2, 4, 3, 7, 6, 5
         1, 2, 4, 3, 7, 5, 6
     '''
+    print("--- BFT ---")
     graph.bft(1)
 
     '''
@@ -194,13 +231,16 @@ if __name__ == '__main__':
         1, 2, 4, 7, 6, 3, 5
         1, 2, 4, 6, 3, 5, 7
     '''
+    print("--- DFT ---")
     graph.dft(1)
-    # graph.dft_recursive(1)
+    print("--- DFT Recursive ---")
+    graph.dft_recursive(1)
 
     '''
     Valid BFS path:
         [1, 2, 4, 6]
     '''
+    print("--- BFS ---")
     print(graph.bfs(1, 6))
 
     '''
@@ -208,9 +248,10 @@ if __name__ == '__main__':
         [1, 2, 4, 6]
         [1, 2, 4, 7, 6]
     '''
+    print("--- DFS ---")
     print(graph.dfs(1, 6))
-    # print(graph.dfs_recursive(1, 6))
-
+    print("--- DFS Recursive ---")
+    print(graph.dfs_recursive(1, 6))
 
     # print("----- FROM README -----")
     # graph = Graph()
@@ -228,3 +269,52 @@ if __name__ == '__main__':
     # graph.bft('0')
 
 
+
+    def find_words(starting_word, ending_word):
+        visited = set()
+        pending = Queue()
+
+        pending.enqueue([starting_word])
+
+        while len(pending) > 0:
+            path = pending.dequeue()
+            vert = path[-1]
+
+            if vert == ending_word:
+                return path
+            
+            if vert not in visited:
+                visited.add(vert)
+                for neighbor in get_neighbors(vert):
+                    new_path = list(path)
+                    new_path.append(neighbor)
+                    pending.enqueue(new_path)
+
+
+    import string
+    letters = list(string.ascii_lowercase)
+    word_set = set(['hit', 'hot', 'hog', 'cog', 'cot'])
+
+    def get_neighbors(word):
+        neighbors = []
+        # g = Graph()
+
+        # starting_word = list(word)
+
+        for i, _ in enumerate(word):
+            for letter in letters:
+                new_word = list(word)
+                new_word[i] = letter
+                w = "".join(new_word)
+
+                if w == word:
+                    continue
+
+                if w in word_set:
+                    neighbors.append(w)
+
+        return neighbors
+
+
+
+    print(find_words("hit", "cog"))
