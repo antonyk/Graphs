@@ -165,9 +165,9 @@ iniital_setup = {
     7: ["w", "s", "e", "n"]
 }
 
-initial_directions = ["w", "n", "e", "s"]
+initial_directions = ["w", "e", "s", "n"]
 
-traversal_path = explore(player, len(room_graph))
+traversal_path = explore(player, len(room_graph), initial_directions)
 # print(traversal_path)
 
 player.current_room = world.starting_room
