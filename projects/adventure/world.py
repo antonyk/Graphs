@@ -1,6 +1,7 @@
 from room import Room
 import random
 import math
+from termcolor import colored
 
 class World:
     def __init__(self):
@@ -98,4 +99,74 @@ class World:
         print(str)
         print("#####")
 
+    def print_map(self, player_room, visited_rooms, starting_room):
+        rotated_room_grid = []
+        for i in range(0, len(self.room_grid)):
+            rotated_room_grid.append([None] * len(self.room_grid))
+        for i in range(len(self.room_grid)):
+            for j in range(len(self.room_grid[0])):
+                rotated_room_grid[len(self.room_grid[0]) - j - 1][i] = self.room_grid[i][j]
+        # print("######")
+        row_len = len(self.room_grid) * 5
+        col_header = f"... WORLD MAP (Grid Size: {self.grid_size})..."
+        pref = [" "] * ((row_len - len(col_header)) // 2)
+        post = [" "] * (row_len - len(col_header) - len(pref))
+        header = "Rows #" + "".join(pref) + col_header + "".join(post) + "#"
+        print(header)
+        print("---- # " + "".join(["-"] * (len(header) - 9)) + " #")
+        s = ""
+        for i in range(len(self.room_grid)):
+            s += " " + f"{i}".zfill(3) + " "
+        s = "     #" + s + "#"
+        print(s)
+        str = ""
+        for r, row in enumerate(rotated_room_grid):
+            all_null = True
+            for room in row:
+                if room is not None:
+                    all_null = False
+                    break
+            if all_null:
+                continue
+            # PRINT NORTH CONNECTION ROW
+            str += "     #"
+            for room in row:
+                if room is not None and room.n_to is not None:
+                    str += "  |  "
+                else:
+                    str += "     "
+            str += "#\n"
+            # PRINT ROOM ROW
+            str += "[" + f"{self.grid_size - r - 1}".zfill(2) + "] #"
+            for c, room in enumerate(row):
+                if room is not None and room.w_to is not None:
+                    str += "-"
+                else:
+                    str += " "
+                if room is not None:
+                    if room.id == player_room.id:
+                        str += colored(" P ", 'yellow')
+                    elif room.id == starting_room.id:
+                        str += colored(" X ", 'red')
+                    elif room.id in visited_rooms:
+                        str += colored(f"{room.id}".zfill(3), 'green')
+                    else:
+                        str += f"{room.id}".zfill(3)
+                else:
+                    str += "   "
+                if room is not None and room.e_to is not None:
+                    str += "-"
+                else:
+                    str += " "
+            str += "#\n"
+            # PRINT SOUTH CONNECTION ROW
+            str += "     #"
+            for room in row:
+                if room is not None and room.s_to is not None:
+                    str += "  |  "
+                else:
+                    str += "     "
+            str += "#\n"
+        print(str)
+        print("#####")
 
