@@ -3,6 +3,8 @@ from player import Player
 from world import World
 
 import random
+import collections
+from util import Stack, Queue
 from ast import literal_eval
 
 # Load world
@@ -28,7 +30,17 @@ player = Player(world.starting_room)
 # Fill this out with directions to walk
 # traversal_path = ['n', 'n']
 traversal_path = []
+pending = collections.deque()
 
+pending.append(world.starting_room)
+while len(pending) > 0:
+    cur = pending.pop()
+    # traversal_path.append()
+    exits = cur.get_exists()
+    for direction in exits:
+        cur.get_room_in_direction(direction)
+
+    # pending.append(world.)
 
 
 # TRAVERSAL TEST
@@ -51,12 +63,12 @@ else:
 #######
 # UNCOMMENT TO WALK AROUND
 #######
-player.current_room.print_room_description(player)
-while True:
-    cmds = input("-> ").lower().split(" ")
-    if cmds[0] in ["n", "s", "e", "w"]:
-        player.travel(cmds[0], True)
-    elif cmds[0] == "q":
-        break
-    else:
-        print("I did not understand that command.")
+# player.current_room.print_room_description(player)
+# while True:
+#     cmds = input("-> ").lower().split(" ")
+#     if cmds[0] in ["n", "s", "e", "w"]:
+#         player.travel(cmds[0], True)
+#     elif cmds[0] == "q":
+#         break
+#     else:
+#         print("I did not understand that command.")
