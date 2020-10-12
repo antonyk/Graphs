@@ -43,7 +43,7 @@ class World:
                     'w', self.rooms[room_graph[room_id][1]['w']])
         self.starting_room = self.rooms[0]
 
-    def print_map(self, player_room, visited_rooms, starting_room):
+    def print_map(self, player_room, visited_rooms, starting_room, tot_cols=26, tot_rows=28):
         rotated_room_grid = []
         for i in range(0, len(self.room_grid)):
             rotated_room_grid.append([None] * len(self.room_grid))
@@ -52,18 +52,18 @@ class World:
                 rotated_room_grid[len(self.room_grid[0]) -
                                   j - 1][i] = self.room_grid[i][j]
         # print("######")
-        row_len = len(self.room_grid) * 7
+        # row_len = len(self.room_grid) * 7
+        row_len = tot_cols * 7
         col_header = f"... WORLD MAP (Grid Size: {self.grid_size})..."
         pref = [" "] * ((row_len - len(col_header)) // 2)
         post = [" "] * (row_len - len(col_header) - len(pref))
-        header = "Rows #" + "".join(pref) + col_header + "".join(post) + "#"
-        print(header)
-        print("---- # " + "".join(["-"] * (len(header) - 9)) + " #")
+        print(f"      {''.join(pref) + col_header + ''.join(post)} ")
         s = ""
-        for i in range(len(self.room_grid)):
+        for i in range(tot_cols):
             s += "  " + f"{i}".zfill(3) + "  "
-        s = "     #" + s + "#"
-        print(s)
+        print(f"      {s} ")
+        print(f"      {'#'*len(s)}#")
+
         str = ""
         for r, row in enumerate(rotated_room_grid):
             all_null = True
@@ -75,59 +75,52 @@ class World:
                 continue
 
             # PRINT NORTH CONNECTION ROW
-            str += "     #"
-            for room in row:
+            top_line = "     #"
+            mid_line = "[" + f"{self.grid_size - r - 1}".zfill(2) + "] #"
+            bot_line = "     #"
+            for i in range(tot_cols):
+                room = row[i]
                 if room is not None:
+                    # PRINT ROOM ROW
                     if room.n_to is not None:
-                        str += "┌──┴──┐"
+                        top_line += " ╔═╩═╗ "
                     else:
-                        str += "┌─────┐"
-                else:
-                    str += "   │   "
-            str += "#\n"
+                        top_line += " ╔═══╗ "
 
-            # PRINT ROOM ROW
-            str += "[" + f"{self.grid_size - r - 1}".zfill(2) + "] #"
-            for c, room in enumerate(row):
-                if room is not None:
                     if room.w_to is not None:
-                        str += "┤ "
+                        mid_line += "═╣"
                     else:
-                        str += "│ "
-                else:
-                    str += "──"
+                        mid_line += " ║"
 
-                if room is not None:
                     if room.id == player_room.id:
-                        str += colored(" P ", 'blue')
+                        mid_line += colored(" P ", 'blue')
                     elif room.id == starting_room.id:
-                        str += colored(" X ", 'red')
+                        mid_line += colored(" X ", 'red')
                     elif room.id in visited_rooms:
-                        str += colored(f"{room.id}".zfill(3), 'green')
+                        mid_line += colored(f"{room.id}".zfill(3), 'green')
                     else:
-                        str += f"{room.id}".zfill(3)
-                else:
-                    str += "─┼─"
-
-                if room is not None:
+                        mid_line += f"{room.id}".zfill(3)
                     if room.e_to is not None:
-                        str += " ├"
+                        mid_line += "╠═"
                     else:
-                        str += " │"
-                else:
-                    str += "──"
-            str += "#\n"
-            # PRINT SOUTH CONNECTION ROW
-            str += "     #"
-            for room in row:
-                if room is not None:
+                        mid_line += "║ "
+
                     if room.s_to is not None:
-                        str += "└──┬──┘"
+                        bot_line += " ╚═╦═╝ "
                     else:
-                        str += "└─────┘"
+                        bot_line += " ╚═══╝ "
+
                 else:
-                    str += "   │   "
-            str += "#\n"
+                    top_line += "   │   "
+                    mid_line += "───┼───"
+                    bot_line += "   │   "
+
+                # top_line += "#\n"
+                # mid_line += "#\n"
+                # bot_line += "#\n"
+
+            str += f"{top_line}#\n{mid_line}#\n{bot_line}#\n"
+
         print(str)
         print("#####")
 
