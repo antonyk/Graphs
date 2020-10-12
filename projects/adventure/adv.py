@@ -330,15 +330,15 @@ else:
 # ######
 # UNCOMMENT TO WALK BASED ON PATH
 # ######
-# visited_rooms = set()
-# player.current_room = world.starting_room
-# visited_rooms.add(player.current_room.id)
-# world.print_map(player.current_room, visited_rooms, world.starting_room)
-# cur_path = []
-# for move in traversal_path:
-#     cmds = input("-> ").lower().split(" ")
-#     player.travel(move)
-#     cur_path.append(move)
-#     visited_rooms.add(player.current_room.id)
-#     world.print_map(player.current_room, visited_rooms, world.starting_room)
-#     print(cur_path)
+visited_rooms = set()
+player.current_room = world.starting_room
+visited_rooms.add(player.current_room.id)
+world.print_map(player.current_room, visited_rooms, world.starting_room)
+cur_path = []
+for move in traversal_path:
+    cmds = input("-> ").lower().split(" ")
+    player.travel(move)
+    cur_path.append(move)
+    visited_rooms.add(player.current_room.id)
+    world.print_map(player.current_room, visited_rooms, world.starting_room)
+    print(cur_path)
